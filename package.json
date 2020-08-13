@@ -16,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/jkithome/prisma-2-node/issues"
   },
-  "homepage": "https://github.com/jkithome/prisma-2-node#readme"
+  "homepage": "https://github.com/jkithome/prisma-2-node#readme",
+  "dependencies": {
+    "graphql-tools": "^6.0.18",
+    "graphql-yoga": "^1.18.3"
+  }
 }
