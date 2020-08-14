@@ -18,7 +18,11 @@
   },
   "homepage": "https://github.com/jkithome/prisma-2-node#readme",
   "dependencies": {
+    "@prisma/client": "2.5.1",
     "graphql-tools": "^6.0.18",
     "graphql-yoga": "^1.18.3"
+  },
+  "devDependencies": {
+    "@prisma/cli": "2.5.1"
   }
 }
