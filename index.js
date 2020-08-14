@@ -1,5 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const { GraphQLServer } = require('graphql-yoga')
+const { makeExecutableSchema } = require('@graphql-tools/schema');
 
 const typeDefs = `
   type Query {
@@ -13,11 +14,16 @@ const resolvers = {
   },
 }
 
+
+const schema = makeExecutableSchema({
+  typeDefs,
+  resolvers,
+});
+
 const prisma = new PrismaClient()
 
 const server = new GraphQLServer({
-  typeDefs,
-  resolvers,
+  schema,
   context: {
     prisma,
   }
