@@ -54,6 +54,22 @@ const typeDefs = `
 
 
 const resolvers = {
+  Query: {
+    user: async (parent, args, context) => {
+      const { id } = args
+      return context.prisma.user.findOne({
+        where: {
+          id,
+        },
+        include: { polls: true }
+      })
+    },
+    users: async (parent, args, context) => {
+      return context.prisma.user.findMany({
+        include: { polls: true }
+      });
+    },
+  },
   Mutation: {
     createUser: (parent, args, context, info) => {
       const newUser = context.prisma.user.create({
