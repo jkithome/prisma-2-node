@@ -1,7 +1,6 @@
-const { PrismaClient } = require('@prisma/client');
-const { GraphQLServer } = require('graphql-yoga')
-const { makeExecutableSchema } = require('@graphql-tools/schema');
-
+const { PrismaClient } = require("@prisma/client");
+const { GraphQLServer } = require("graphql-yoga");
+const { makeExecutableSchema } = require("@graphql-tools/schema");
 
 const typeDefs = `
   type User {
@@ -52,21 +51,20 @@ const typeDefs = `
   }
 `;
 
-
 const resolvers = {
   Query: {
     user: async (parent, args, context) => {
-      const { id } = args
+      const { id } = args;
       return context.prisma.user.findOne({
         where: {
           id,
         },
-        include: { polls: true }
-      })
+        include: { polls: true },
+      });
     },
     users: async (parent, args, context) => {
       return context.prisma.user.findMany({
-        include: { polls: true }
+        include: { polls: true },
       });
     },
   },
@@ -76,35 +74,49 @@ const resolvers = {
         data: {
           name: args.name,
         },
-      })
-      return newUser
+      });
+      return newUser;
+    },
+    createPoll: (parent, args, context, info) => {
+      const { description, id, options } = args;
+      const newPoll = context.prisma.poll.create({
+        data: {
+          description,
+          user: {
+            connect: { id },
+          },
+          options: {
+            create: options.map((option) => ({ text: option })),
+          },
+        },
+      });
+      return newPoll;
     },
   },
-}
-
+};
 
 const schema = makeExecutableSchema({
   typeDefs,
   resolvers,
 });
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
 const server = new GraphQLServer({
   schema,
   context: {
     prisma,
-  }
-})
+  },
+});
 
 const options = {
   port: 8000,
-  endpoint: '/graphql',
-  subscriptions: '/subscriptions',
-  playground: '/playground',
-}
+  endpoint: "/graphql",
+  subscriptions: "/subscriptions",
+  playground: "/playground",
+};
 server.start(options, ({ port }) =>
   console.log(
-    `Server started, listening on port ${port} for incoming requests.`,
-  ),
-)
+    `Server started, listening on port ${port} for incoming requests.`
+  )
+);
