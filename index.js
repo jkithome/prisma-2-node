@@ -118,6 +118,23 @@ const resolvers = {
       });
       return newPoll;
     },
+    createVote: (parent, args, context, info) => {
+      const { userID, pollID, optionID } = args
+      const newVote = context.prisma.vote.create({
+        data: {
+          user: {
+            connect: { id: userID }
+          },
+          poll: {
+            connect: { id: pollID }
+          },
+          option: {
+            connect: { id: optionID }
+          }
+        }
+      });
+      return newVote;
+    }
   },
 };
 
