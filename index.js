@@ -67,6 +67,32 @@ const resolvers = {
         include: { polls: true },
       });
     },
+    poll: async (parent, args, context) => {
+      const { id } = args;
+      return context.prisma.poll.findOne({
+        where: {
+          id,
+        },
+        include: {
+          user: true,
+          options: true,
+          votes: {
+            select: { user: true, option: true },
+          },
+        },
+      });
+    },
+    polls: async (parent, args, context) => {
+      return context.prisma.poll.findMany({
+        include: {
+          user: true,
+          options: true,
+          votes: {
+            select: { user: true, option: true },
+          },
+        },
+      });
+    },
   },
   Mutation: {
     createUser: (parent, args, context, info) => {
